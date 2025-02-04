@@ -3,7 +3,7 @@ from typing import Optional
 from datetime import datetime
 
 
-class CustomerCreate(BaseModel):
+class UserCreate(BaseModel):
     name: str
     phone_number: int
     email: EmailStr
@@ -11,7 +11,7 @@ class CustomerCreate(BaseModel):
     password: str
 
 
-class CustomerOut(BaseModel):
+class UserOut(BaseModel):
     id: int
     name: str
     phone_number: int

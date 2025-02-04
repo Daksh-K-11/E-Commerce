@@ -2,8 +2,8 @@ from sqlalchemy import Column, Integer, String, BigInteger
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from .database import Base
 
-class Customer(Base):
-    __tablename__ = 'customer'
+class User(Base):
+    __tablename__ = 'users'
     
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String, nullable=False)
@@ -11,5 +11,11 @@ class Customer(Base):
     email = Column(String, nullable=False, unique=True)
     address = Column(String, nullable=True)
     password = Column(String, nullable=False)
-    role = Column(String, server_default='customer')
+    role = Column(String, nullable=False, server_default='user')
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=('now()'))
+    
+    
+# class Seller(Base):
+#     __tablename__ = 'sellers'
+    
+    

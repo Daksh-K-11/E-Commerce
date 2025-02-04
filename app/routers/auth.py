@@ -13,20 +13,20 @@ def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Session =
     print(f"Username: {user_credentials.username}")
     print(f"Password: {user_credentials.password}")
     
-    customer = db.query(models.Customer).filter(models.Customer.email == user_credentials.username).first()
+    user = db.query(models.User).filter(models.User.email == user_credentials.username).first()
     
-    if not customer:
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, 
             detail="Invalid Credentials"
         )
     
-    if not utils.verify(user_credentials.password, customer.password):
+    if not utils.verify(user_credentials.password, user.password):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, 
             detail="Invalid Credentials"
         )
 
-    access_token = oauth2.create_access_token(data={"id": customer.id})
+    access_token = oauth2.create_access_token(data={"id": user.id})
 
     return {"access_token": access_token, "token_type": "Bearer"}

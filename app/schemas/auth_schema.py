@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional, Literal
 
-class Customer(BaseModel):
+class User(BaseModel):
     name : str
     phone_number : int
     
