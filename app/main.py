@@ -1,20 +1,17 @@
-from fastapi import FastAPI, status, HTTPException, Depends
+from fastapi import FastAPI
 from  . import models
 from .database import engine, get_db
 from sqlalchemy.orm import Session
+from .routers import auth, register
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
+app.include_router(auth.router)
+app.include_router(register.router)
+
+
 @app.get('/')
-async def root():
-    return {"message: Starting E-commerce"}
-
-@app.get('/products')
-def products():
-    return {"message":'here will be post'}
-
-@app.get('/test')
-def test(db : Session = Depends(get_db)):
-    return {"test": "test"}
+def root():
+    return {"message" : "Hey there it's me"}

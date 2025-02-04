@@ -2,9 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import urllib.parse
-# import psycopg2
-# from psycopg2.extras import RealDictCursor
-# import time
+
 from .config import settings
 
 database_password = urllib.parse.quote_plus(settings.database_password)
