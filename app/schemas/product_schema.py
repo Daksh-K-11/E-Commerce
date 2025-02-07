@@ -12,7 +12,7 @@ class ProductCreate(BaseModel):
     price: Decimal
     quantity: int
     city: str
-    extra_specification: Optional[dict] = None
+    extra_specifications: Optional[dict] = None
     images: List[ProductImage] = Field(..., min_items=1, max_items=5)
     
 class ProductOut(BaseModel):
