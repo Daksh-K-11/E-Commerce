@@ -33,8 +33,8 @@ def create_product(
         new_image = ProductImage(
         product_id=new_product.id,
         image_url=str(image.image_url)
-    )
-    db.add(new_image)
+        )
+        db.add(new_image)
 
     db.commit()
     db.refresh(new_product)
