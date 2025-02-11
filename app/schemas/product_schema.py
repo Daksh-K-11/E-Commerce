@@ -17,11 +17,11 @@ class ProductCreate(BaseModel):
     
     
 class ProductUpdate(BaseModel):
-    title: Optional[str]
-    descritpion: Optional[str]
-    price: Optional[Decimal]
-    quantity: Optional[int]
-    city: Optional[str]
+    title: Optional[str] = None
+    description: Optional[str] = None
+    price: Optional[Decimal] = None
+    quantity: Optional[int] = None
+    city: Optional[str] = None
     extra_specifications: Optional[dict] = None
     images: Optional[List[ProductImage]] = Field(
         None, 
