@@ -4,6 +4,7 @@ from ..database import get_db
 from ..models import Product, ProductImage
 from ..schemas.product_schema import ProductCreate, ProductOut
 from ..dependencies import seller_required
+from typing import List
 
 router = APIRouter(prefix="/product", tags=["Products"])
 
@@ -14,7 +15,7 @@ def create_product(
     current_user = Depends(seller_required)
 ):
     if not current_user.seller:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User is not a seller")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not a seller")
     
     new_product = Product(
         seller_id = current_user.seller.id,
@@ -40,3 +41,9 @@ def create_product(
     db.refresh(new_product)
 
     return new_product
+
+@router.get("/", response_model=List[ProductOut])
+def get_all_products(db: Session = Depends(get_db)):
+    
+    products = db.query(Product).all()
+    return products

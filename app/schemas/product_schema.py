@@ -23,7 +23,6 @@ class ProductOut(BaseModel):
     quantity: int
     city: str
     extra_specifications: Optional[dict] = None
-    created_at: datetime
     images: List[ProductImage]
 
     class Config:
