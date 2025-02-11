@@ -47,3 +47,18 @@ def get_all_products(db: Session = Depends(get_db)):
     
     products = db.query(Product).all()
     return products
+
+@router.get("/my-products", response_model=List[ProductOut])
+def get_my_products(
+    db: Session = Depends(get_db),
+    current_user = Depends(seller_required)
+):
+    
+    if not current_user.seller:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User is not a seller")
+    
+    products = db.query(Product).filter(Product.seller_id == current_user.seller.id).all()
+    return products
+
+
+@router.update()
