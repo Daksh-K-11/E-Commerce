@@ -107,3 +107,19 @@ def patch_product(
     db.commit()
     db.refresh(product)
     return product
+
+
+@router.delete("/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_product(product_id: int, db: Session = Depends(get_db), current_user = Depends(seller_required)):
+    
+    product = db.query(Product).filter(Product.id == product_id).first()
+    
+    if not product:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+    
+    if current_user.seller.id != product.seller_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to delete this product")
+    
+    db.delete(product)
+    db.commit()
+    return None
