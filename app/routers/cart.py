@@ -26,7 +26,8 @@ def add_item_to_cart(
     Add an item to the user's cart (or update its quantity) ensuring the quantity does not exceed the available stock.
     """
     
-    
+    if (item.quantity <= 0):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Quatity cannot must be a positive integer")
     
     product = db.query(Product).filter(Product.id == item.product_id).first()
     if not product:
@@ -51,13 +52,7 @@ def add_item_to_cart(
         .first()
     )
     if cart_item:
-        new_quantity = cart_item.quantity + item.quantity
-        if new_quantity > product.quantity:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Total quantity in cart exceeds available stock"
-            )
-        cart_item.quantity = new_quantity
+        cart_item.quantity = item.quantity
     else:
         cart_item = CartItem(
             cart_id=cart.id,
