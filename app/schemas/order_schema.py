@@ -16,6 +16,7 @@ class OrderOut(BaseModel):
     id: int
     created_at: datetime
     items: List[OrderItemOut]
+    total_amount: float
 
     class Config:
         orm_mode = True

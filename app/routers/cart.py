@@ -22,9 +22,6 @@ def add_item_to_cart(
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
-    """
-    Add an item to the user's cart (or update its quantity) ensuring the quantity does not exceed the available stock.
-    """
     
     if (item.quantity <= 0):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Quatity cannot must be a positive integer")
@@ -64,5 +61,3 @@ def add_item_to_cart(
     db.commit()
     db.refresh(cart)
     return cart
-
-

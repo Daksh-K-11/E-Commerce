@@ -20,6 +20,7 @@ class CartItemOut(BaseModel):
 class CartOut(BaseModel):
     id: int
     items: List[CartItemOut]
+    total_amount: float
 
     class Config:
         orm_mode = True

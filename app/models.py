@@ -66,8 +66,12 @@ class Cart(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), unique=True)
     
-    # Relationship to cart items
     items = relationship("CartItem", back_populates="cart", cascade="all, delete-orphan")
+    
+    @property
+    def total_amount(self):
+        return sum(item.quantity * float(item.product.price) for item in self.items) if self.items else 0.0
+
 
 class CartItem(Base):
     __tablename__ = "cart_items"
@@ -77,7 +81,7 @@ class CartItem(Base):
     quantity = Column(Integer, nullable=False, default=1)
     
     cart = relationship("Cart", back_populates="items")
-    product = relationship("Product")  # Assumes you want to join product details
+    product = relationship("Product")
 
 class Order(Base):
     __tablename__ = "orders"
@@ -86,6 +90,10 @@ class Order(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=('now()'))
     
     items = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")
+    
+    @property
+    def total_amount(self):
+        return sum(item.quantity * float(item.product.price) for item in self.items) if self.items else 0.0
 
 class OrderItem(Base):
     __tablename__ = "order_items"
