@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
 from ..database import get_db
 from ..models import Product, Cart, CartItem
 from ..schemas.cart_schema import CartItemCreate, CartOut
