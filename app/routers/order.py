@@ -1,14 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
 from ..database import get_db
 from ..models import Product, Cart, CartItem, Order, OrderItem
-from ..schemas.order_schema import OrderItemOut, OrderOut
+from ..schemas.order_schema import OrderOut
 from ..dependencies import get_current_user
 
-router = APIRouter(tags=["Order"])
+router = APIRouter(tags=["Order"], prefix="/order")
 
-@router.post("/order", response_model=OrderOut, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=OrderOut, status_code=status.HTTP_201_CREATED)
 def place_order(
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
@@ -17,7 +16,7 @@ def place_order(
     Place an order by verifying stock for all cart items, creating an order with corresponding order items,
     subtracting the ordered quantity from products, and clearing the user's cart.
     """
-    # Retrieve the user's cart.
+
     cart = db.query(Cart).filter(Cart.user_id == current_user.id).first()
     if not cart or not cart.items:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Cart is empty")
