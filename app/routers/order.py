@@ -4,6 +4,7 @@ from ..database import get_db
 from ..models import Product, Cart, CartItem, Order, OrderItem
 from ..schemas.order_schema import OrderOut
 from ..dependencies import get_current_user
+from typing import List
 
 router = APIRouter(tags=["Order"], prefix="/order")
 
@@ -50,3 +51,10 @@ def place_order(
     db.commit()
     db.refresh(order)
     return order
+
+
+@router.get("/", status_code=status.HTTP_200_OK, response_model=List[OrderOut])
+def get_order(db: Session = Depends(get_db), current_user= Depends(get_current_user)):
+    orders = db.query(Order).filter(Order.user_id == current_user.id).all()
+    
+    return orders

@@ -7,7 +7,6 @@ from ..config import settings
 
 import qrcode
 from io import BytesIO
-from fastapi.responses import JSONResponse
 import base64
 
 router = APIRouter(tags=["Payment"], prefix="/payment")
