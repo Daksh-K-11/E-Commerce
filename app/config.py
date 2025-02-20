@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     algorithm: str
     access_token_expire_minutes: int
     upi_id: str
+    return_days: str
     
     class Config:
         env_file = ".env"
