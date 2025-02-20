@@ -40,6 +40,8 @@ class ProductOut(BaseModel):
     city: str
     extra_specifications: Optional[dict] = None
     images: List[ProductImage]
+    rating_avg: float
+    rating_count: int
 
     class Config:
         orm_mode = True
