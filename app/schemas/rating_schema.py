@@ -1,4 +1,4 @@
-from pydantic import BaseModel, conint
+from pydantic import BaseModel
 from typing import Literal
 
 class RatingCreate(BaseModel):
