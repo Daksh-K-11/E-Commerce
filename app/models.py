@@ -133,7 +133,6 @@ class ProductRating(Base):
     product = relationship("Product", back_populates="ratings")
     
 
-
 class ReturnOrder(Base):
     __tablename__ = "return_orders"
     id = Column(Integer, primary_key=True, index=True)

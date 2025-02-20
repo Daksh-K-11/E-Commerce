@@ -35,3 +35,16 @@ def rate_product(rating_data: RatingCreate, db: Session = Depends(get_db), curre
         db.commit()
         db.refresh(new_rating)
         return new_rating
+    
+
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_rating(id: int ,db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+    
+    rating = db.query(ProductRating).filter(ProductRating.id==id, ProductRating.user_id==current_user.id).first()
+    
+    if not rating:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="No such product")
+    
+    db.delete(rating)
+    db.commit()
+    return None
