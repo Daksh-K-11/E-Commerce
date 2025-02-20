@@ -1,19 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from ..database import get_db
 from ..models import Order, ReturnOrder
 from ..dependencies import get_current_user
 from ..config import settings
-from ..schemas.return_schema import ReturnOrderOut
-from pydantic import BaseModel
-from typing import Optional
+from ..schemas.return_schema import ReturnOrderOut, ReturnRequest
 
 router = APIRouter(prefix="/return", tags=["Return"])
-
-class ReturnRequest(BaseModel):
-    order_id: int
-    reason: Optional[str] = None
 
 @router.post("/", response_model=ReturnOrderOut, status_code=status.HTTP_200_OK)
 def return_order(return_req: ReturnRequest, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
@@ -23,7 +17,7 @@ def return_order(return_req: ReturnRequest, db: Session = Depends(get_db), curre
          raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
     
     allowed_return_days = settings.return_days
-    if datetime.utcnow() > order.created_at + timedelta(days=allowed_return_days):
+    if datetime.now(timezone.utc) > order.created_at + timedelta(days=allowed_return_days):
          raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Return period has expired")
     
     return_order_record = ReturnOrder(order_id=order.id, user_id=current_user.id, reason=return_req.reason)
