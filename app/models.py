@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, BigInteger, ForeignKey, Text, Numeric
+from sqlalchemy import Column, Integer, String, BigInteger, ForeignKey, Text, Numeric, UniqueConstraint
 from sqlalchemy.sql.sqltypes import TIMESTAMP
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
@@ -49,6 +49,19 @@ class Product(Base):
     
     images = relationship("ProductImage", back_populates="product", cascade="all, delete-orphan")
     seller = relationship("Seller", back_populates="products")
+    
+    ratings = relationship("ProductRating", back_populates="product", cascade="all, delete-orphan")
+    
+    @property
+    def rating_count(self):
+        return len(self.ratings) if self.ratings else 0
+
+    @property
+    def rating_avg(self):
+        if not self.ratings:
+            return 0.0
+        total = sum(r.rating for r in self.ratings)
+        return total / len(self.ratings)
 
 
 class ProductImage(Base):
@@ -104,3 +117,17 @@ class OrderItem(Base):
     
     order = relationship("Order", back_populates="items")
     product = relationship("Product")
+
+
+class ProductRating(Base):
+    __tablename__ = "product_ratings"
+    
+    id  = Column(Integer, primary_key=True, nullable=False, index=True)
+    product_id = Column(Integer, ForeignKey("products.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    rating = Column(Integer, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=('now()'))
+
+    __table_args__ = (UniqueConstraint('product_id', 'user_id', name='unique_product_rating'),)
+
+    product = relationship("Product", back_populates="ratings")
