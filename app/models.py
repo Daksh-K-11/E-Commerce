@@ -131,3 +131,15 @@ class ProductRating(Base):
     __table_args__ = (UniqueConstraint('product_id', 'user_id', name='unique_product_rating'),)
 
     product = relationship("Product", back_populates="ratings")
+    
+
+
+class ReturnOrder(Base):
+    __tablename__ = "return_orders"
+    id = Column(Integer, primary_key=True, index=True)
+    order_id = Column(Integer, ForeignKey("orders.id", ondelete="CASCADE"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    reason = Column(String, nullable=True)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=('now()'))
+
+    order = relationship("Order")
